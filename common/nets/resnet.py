@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision.models.resnet import BasicBlock, Bottleneck
-from torchvision.models.resnet import model_urls
+# from torchvision.models.resnet import model_urls
 
 class ResNetBackbone(nn.Module):
 
@@ -67,13 +67,24 @@ class ResNetBackbone(nn.Module):
 
         return x, x4
 
-    def init_weights(self):
-        org_resnet = torch.utils.model_zoo.load_url(model_urls[self.name])
-        # drop orginal resnet fc layer, add 'None' in case of no fc layer, that will raise error
-        org_resnet.pop('fc.weight', None)
-        org_resnet.pop('fc.bias', None)
+    # def init_weights(self):
+    #     org_resnet = torch.utils.model_zoo.load_url(model_urls[self.name])
+    #     # drop orginal resnet fc layer, add 'None' in case of no fc layer, that will raise error
+    #     org_resnet.pop('fc.weight', None)
+    #     org_resnet.pop('fc.bias', None)
         
-        self.load_state_dict(org_resnet)
-        print("Initialize resnet from model zoo")
+    #     self.load_state_dict(org_resnet)
+    #     print("Initialize resnet from model zoo")
 
+    def init_weights(self):
+        # Load pre-trained model weights
+        pretrained_model = torchvision.models.__dict__self.name
+
+        # Remove the last layer (fully connected layer) from the pre-trained model
+        pretrained_model = nn.Sequential(*list(pretrained_model.children())[:-1])
+
+        # Load the pre-trained model weights into the current model
+        self.load_state_dict(pretrained_model.state_dict(), strict=False)
+
+        print("Initialize resnet with pre-trained weights")
 

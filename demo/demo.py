@@ -1,5 +1,6 @@
 import sys
 import os
+os.environ['PYOPENGL_PLATFORM'] = 'wgl'
 import os.path as osp
 import argparse
 import numpy as np
